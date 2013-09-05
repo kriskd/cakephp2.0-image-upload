@@ -2,7 +2,12 @@
 
 App::uses('Component', 'Controller');
   
-class ImageUploaderComponent extends Component { 
+class ImageUploaderComponent extends Component {
+  
+  //Set to true to put scaled image in a timestamp folder
+  //Set to false to put scaled image in a folder called "image"
+  public $scaledImageTimeStampName = true;
+  
  //Load the component we need
  
  /*
@@ -229,11 +234,20 @@ class ImageUploaderComponent extends Component {
      $new_filePath=null;
      if($max_width !== FALSE && $width > $max_width){
               
-       $new_filename=time().'_'.$max_width.'_'.$fullFilename;
+        if ($this->scaledImageTimeStampName == true) {
+          $uploadDir = $current_destination;
+          $scaledImagePath = $current_destination.time().'_'.$max_width.'_'.$fullFilename;
+        } else {
+          $uploadDir = $current_destination . 'image';
+          $scaledImagePath = $current_destination . 'image' . DS . $fullFilename;
+        }
               
        $max_height = ($max_width * $height) / $width;
               
-       $new_filePath = ($this->create_scaled_image($new_filename,$current_filePath, array("upload_dir"=>$current_destination, "max_width"=>$max_width,"max_height"=>$max_height))) ? $current_destination.$new_filename : null;
+       $new_filePath = ($this->create_scaled_image($new_filename,$current_filePath,
+                                                   array("upload_dir"=>$uploadDir,
+                                                         "max_width"=>$max_width,"max_height"=>$max_height))
+                        ) ? $scaledImagePath : null;
                 
 	 }
       
