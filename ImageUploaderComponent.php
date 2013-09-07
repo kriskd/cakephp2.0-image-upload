@@ -236,15 +236,17 @@ class ImageUploaderComponent extends Component {
               
         if ($this->scaledImageTimeStampName == true) {
           $uploadDir = $current_destination;
-          $scaledImagePath = $current_destination.time().'_'.$max_width.'_'.$fullFilename;
+          $filename = time().'_'.$max_width.'_'.$fullFilename;
+          $scaledImagePath = $current_destination.$filename;
         } else {
           $uploadDir = $current_destination . 'image';
+          $filename = $fullFilename;
           $scaledImagePath = $current_destination . 'image' . DS . $fullFilename;
         }
               
        $max_height = ($max_width * $height) / $width;
               
-       $new_filePath = ($this->create_scaled_image($new_filename,$current_filePath,
+       $new_filePath = ($this->create_scaled_image($filename, $current_filePath,
                                                    array("upload_dir"=>$uploadDir,
                                                          "max_width"=>$max_width,"max_height"=>$max_height))
                         ) ? $scaledImagePath : null;
